@@ -136,10 +136,10 @@ def install_new_minion(node,region):
 	print LOG
         ComputeNodeMana().updateMinionState("INIT_ERROR",node.id,region)
 
-    time.sleep(60)
+    time.sleep(30)
     if not "_error_" in LOG:
 	rets.append(masterAcceptKey(node.hypervisor_hostname,node.id,region))
-	time.sleep(60)
+	time.sleep(35)
 	LOG=syncModules2Minion(node.hypervisor_hostname,node.id,region)
 	if "modules" in LOG:
 	    state="INSTALLED"
@@ -205,4 +205,9 @@ def syncModules2Minion(minionName,node_id,region):
     return salt_log
 
 if __name__=="__main__":
-		loop_compute_nodes()
+		while True:
+				try:
+						loop_compute_nodes()
+				except Exception,ex:
+						print Exception,"install_error:",ex
+				time.sleep(600)
