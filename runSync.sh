@@ -1,2 +1,2 @@
 #!/bin/sh
-python sync.py >> sync.log &
+nohup python sync_salt_compute_nodes.py >> sync.log &
