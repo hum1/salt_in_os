@@ -209,7 +209,7 @@ import time
 
 def hello():
     loop_compute_nodes()
-    time.sleep(60)
+    time.sleep(600)
     now=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     print "Now:%s,run thread sleep for 600s.." % now
     t = Timer(1, hello)
