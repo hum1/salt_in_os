@@ -1,4 +1,4 @@
-from db import conn
+from db import connection
 import json
 import c2_ssh
 from beans import ComputeNodeMana
@@ -204,10 +204,17 @@ def syncModules2Minion(minionName,node_id,region):
     ComputeNodeMana().addSaltLog(salt_log,"SYNC_ALL")
     return salt_log
 
+from threading import Timer
+import time
+
+def hello():
+    loop_compute_nodes()
+    time.sleep(600)
+    now=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    print "Now:%s,run thread sleep for 600s.." % now
+    t = Timer(1, hello)
+    t.start()
+
 if __name__=="__main__":
-		while True:
-				try:
-						loop_compute_nodes()
-				except Exception,ex:
-						print Exception,"install_error:",ex
-				time.sleep(600)
+    t = Timer(1, hello)
+    t.start()

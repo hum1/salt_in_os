@@ -1,10 +1,10 @@
-from db import conn
+from db import connection
 
 NOVA=lambda x:x+"_nova"
 NEUTRON=lambda x:x+"_neutron"
 
-NOVA_DB=lambda x:conn(NOVA(x))
-NEUTRON_DB=lambda x:conn(NEUTRON(x))
+NOVA_DB=lambda x:connection(NOVA(x))
+NEUTRON_DB=lambda x:connection(NEUTRON(x))
 
 RTN_200="""{"code":200,"message":"ok","data":"%s"}"""
 RTN_500="""{"code":500,"message":"%s","data":"None"}"""

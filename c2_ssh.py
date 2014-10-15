@@ -3,7 +3,7 @@ import paramiko
 import json
 import os
 
-def conn(host,command,user="root",pwd=None,port=22):	
+def conn(host,command,user="root",pwd=None,port=22):
 	ssh=paramiko.SSHClient()
 	ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 	print "host:%s,command:%s,user:%s,pwd:%s,port:%s" % (host,command,user,pwd,port)
@@ -20,11 +20,15 @@ def conn(host,command,user="root",pwd=None,port=22):
 	    print "An error happened by:%s" % errot_list
 	    return error
 
+import socket
 
-def conn2(host,command,user="root",pwd=None,port=22):	
+def conn2(host,command,user="root",pwd=None,port=22):
 	ssh=paramiko.SSHClient()
 	ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-	PRIVATE_KEY='/root/.ssh/id_rsa'
+	if socket.gethostname()=="m1.local":
+	    PRIVATE_KEY='/Users/huming/.ssh/id_rsa'
+	else:
+	    PRIVATE_KEY='/root/.ssh/id_rsa'
 	ssh.connect(host,port,user,pwd,key_filename=PRIVATE_KEY)
 #,timeout=300
 	stdin,stdout,stderr=ssh.exec_command(command)
@@ -35,6 +39,3 @@ def conn2(host,command,user="root",pwd=None,port=22):
 	    return output
 	else:
 	    return "An _error_ happened by:%s" % error
-
-
-

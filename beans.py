@@ -1,5 +1,5 @@
 from django.conf import settings
-from db import conn
+from db import connection
 from public import NOVA_DB,NEUTRON_DB,NOVA,NEUTRON
 
 class ComputeNode:
@@ -47,35 +47,46 @@ INSERT INTO salt_thread_log(log,create_time,type) VALUES (%s,now(),%s)
 class ComputeNodeMana:
 
     def updateMinion(self,vms,deleted,_id,region):
-	cursor=conn().cursor()
+	conn=connection()
+	cursor=conn.cursor()
 	cursor.execute(UPDATE_MINION_VMS,(vms,deleted,_id,region))
+  	conn.commit()
 	cursor.close()
+  	conn.close()
 
     def updateMinionState(self,state,_id,region):
-	cursor=conn().cursor()
+	conn=connection()
+  	cursor=conn.cursor()
 	cursor.execute(UPDATE_MINION_STATE,(state,_id,region))
-	cursor.close()
-
+  	conn.commit()
+  	cursor.close()
+  	conn.close()
     def addMinion(self,n,region):
-	cursor=conn().cursor()
+	conn=connection()
+  	cursor=conn.cursor()
 	try:
 	    cursor.execute(ADD_Minion,(n.id,n.host_ip,n.hypervisor_hostname,region,n.running_vms,n.deleted))
 	except Exception,ex:
 	    print Exception,":",ex
 	    return False
 	finally:
-	    cursor.close()
+      	    conn.commit()
+            cursor.close()
+            conn.close()
 	return True
 
     def addSaltLog(self,log,Type):
-	cursor=conn().cursor()
+	conn=connection()
+  	cursor=conn.cursor()
 	try:
 	    cursor.execute(SALT_LOG,(log,Type,))
 	except Exception,ex:
 	    print Exception,":",ex
 	    return False
 	finally:
-	    cursor.close()
+            conn.commit()
+      	    cursor.close()
+            conn.close()
 	return True
 
     def getAllComputeNodes(self,db):
@@ -94,14 +105,17 @@ class ComputeNodeMana:
 		host_ip=line[7]
 		_id=line[8]
 		nodes.append(ComputeNode(vcpus,memory_mb,vcpus_used,memory_mb_used,hypervisor_hostname,running_vms,deleted,host_ip,_id))
-	cursor.close()
+  	cursor.close()
+  	db.close()
 	return nodes
 
     def getSaltComputeNodes(self,region):
-	cursor=conn().cursor()
+	conn=connection()
+  	cursor=conn.cursor()
 	cursor.execute(GET_SALT_PHYSICAL,(region,))
 	results=cursor.fetchall()
-	cursor.close()
+  	cursor.close()
+  	conn.close()
 	nodes={}
 	for line in results:
 		minion={}
